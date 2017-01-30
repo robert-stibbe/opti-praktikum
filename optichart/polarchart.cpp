@@ -19,7 +19,7 @@ PolarChart::PolarChart(QWidget *parent)
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(10);
+    timer->start(1);
 
 
 }
@@ -30,12 +30,13 @@ void PolarChart::update()
     static std::normal_distribution<> dist(MITTELWERT, ABWEICHUNG);
 
     QChart *oldChart = chart();
-
+//entferne bisherige linien
     QList<QAbstractSeries *> oldseriesList = oldChart->series();
     foreach (QAbstractSeries *series, oldseriesList)
     {
        oldChart->removeSeries(series);
     }
+//addiere zufallszahlen zu Druckwert
     QList<QPointF> zlist;
     foreach (QPointF pt, oriWerte)
     {
@@ -43,24 +44,24 @@ void PolarChart::update()
        //  qDebug() << zufallsZahl;
        zlist.append(QPointF( pt.rx(),pt.ry()+zufallsZahl));
     }
-
+//füge neue punkte hinzu
     QLineSeries *druckWerte2 = new QLineSeries();
     druckWerte2->append(zlist);
     chart()->addSeries(druckWerte2);
 
  //   qDebug() << "repaint";
     repaint();
-    //qDebug() << "Frame: " << ++frameZaehler;
+    qDebug() << "Frame: " << ++frameZaehler;
 }
 void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
 {
-//  druckWerte = new QLineSeries();
+  //  druckWerte = new QLineSeries();
   //druckWerte->setName("Druck");
-
-  for (float phi=0; phi<360; phi+=1)
+// erzeuge testpunkte
+  for (float phi=0; phi<360; phi+=0.01)
   {
-      float r = phi;
-      oriWerte.append( QPointF (phi, 3*r));
+      float druck = phi;
+      oriWerte.append( QPointF (phi, druck));
      // oriWerte.append( QPointF (phi, 2*r));
 
   }
