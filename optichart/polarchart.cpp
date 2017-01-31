@@ -55,10 +55,15 @@ void PolarChart::update()
 }
 void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
 {
+    QLineSeries *marker1 = new QLineSeries();
+
+            marker1->append(0, 0);
+            marker1->append(90, 100);
+
   //  druckWerte = new QLineSeries();
   //druckWerte->setName("Druck");
 // erzeuge testpunkte
-  for (float phi=0; phi<360; phi+=0.01)
+  for (float phi=0; phi<360; phi+=0.05)
   {
       float druck = phi;
       oriWerte.append( QPointF (phi, druck));
@@ -167,6 +172,7 @@ void PolarChart::switchChartType()
         oldChart->removeAxis(axis);
         newChart->addAxis(axis, axis->alignment());
     }
+
 
     foreach (QAbstractSeries *series, seriesList) {
         newChart->addSeries(series);
