@@ -26,7 +26,7 @@ private:
     void switchChartType();
 //   QList<QAbstractSeries *> oriSeriesList ;
     QList<QPointF> oriWerte;
-//    QLineSeries *druckWerte ;
+    QLineSeries *druckWerte2 ;
 };
 
 #endif // POLARCHART_H
