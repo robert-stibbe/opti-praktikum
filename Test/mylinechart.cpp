@@ -3,10 +3,11 @@
 #include <QtCore/QDebug>
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
+#include <QScatterSeries>
 
 MyLineChart::MyLineChart()
 {
-
+    lin1 = new QLineSeries();
 }
 
 MyLineChart::MyLineChart(QWidget *parent )
@@ -16,8 +17,6 @@ MyLineChart::MyLineChart(QWidget *parent )
 
 void MyLineChart::mousePressEvent(QMouseEvent *event)
 {
-
-
     QChart *oldChart = chart();
 
     QPointF chartPos = oldChart->mapToValue(event->localPos());
@@ -33,9 +32,9 @@ void MyLineChart::mousePressEvent(QMouseEvent *event)
     }
 
     qreal linienabstand=  qSqrt(qPow(pointL.rx() - pointR.rx(), 2) + qPow(pointL.ry() - pointR.ry(), 2));
-     qDebug() << "linienabstand: " << linienabstand;
+   // qDebug() << "linienabstand: " << linienabstand;
 
-     /*
+    emit setAbstand( linienabstand );
      //entferne bisherige linien
          QList<QAbstractSeries *> oldseriesList = oldChart->series();
          foreach (QAbstractSeries *series, oldseriesList)
@@ -43,22 +42,23 @@ void MyLineChart::mousePressEvent(QMouseEvent *event)
             oldChart->removeSeries(series);
          }
 
-*/
-     QList<QPointF> zlist;
+ //    QList<QPointF> zlist;
+ //    zlist.append(pointR);
+ //    zlist.append(pointL);
 
-     zlist.append(pointR);
-     zlist.append(pointL);
-
-
-
-
+    QLineSeries *lin1= new QLineSeries();
+    QLineSeries *lin2= new QLineSeries();
  //füge neue punkte hinzu
-     QLineSeries *lin1 = new QLineSeries();
+     lin1->clear();
 
+     QScatterSeries *series1 = new QScatterSeries();
+     series1->append(0,0);
+     series1->append(10,10);
 
-     lin1->append(2, 2);
-     lin1->append(3, 8);
-   //  lin1->append(10, 10);
+     lin1->append(0, 0);
+     lin1->append(pointR.rx(), pointR.ry());
+     lin1->append(pointL.rx(), pointL.ry());
+     lin1->append(10, 10);
 
      /*
      lin1->append(2, 2);
@@ -68,12 +68,14 @@ void MyLineChart::mousePressEvent(QMouseEvent *event)
     // lin1->append(10, 5);
 
     // lin1->append(zlist);
-  //   chart()->addSeries(lin1);
+     chart()->addSeries(series1);
 
-  qDebug() << "Linie: " << zlist;
-   //  repaint();
+    chart()->addSeries(lin1);
+    chart()->addSeries(lin2);
 
-
+ qDebug() << "Linie: " << lin1->points();
+     repaint();
+   // update();
 
     event->accept(); // A no-op, but I will do it anyway!!!
 }

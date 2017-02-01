@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>410</width>
-    <height>352</height>
+    <width>268</width>
+    <height>301</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,18 +19,38 @@
      <widget class="MyLineChart" name="graphicsView"/>
     </item>
     <item>
-     <widget class="QLabel" name="Abschtanstext">
-      <property name="text">
-       <string>Abstand:</string>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="bottomMargin">
+       <number>6</number>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="abstand">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
+      <item>
+       <widget class="QLabel" name="Abschtanstext">
+        <property name="text">
+         <string>Abstand:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="abstand">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QPushButton" name="pushButton">
@@ -46,7 +66,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>410</width>
+     <width>268</width>
      <height>17</height>
     </rect>
    </property>
@@ -70,5 +90,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>139</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

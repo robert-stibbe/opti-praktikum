@@ -11,6 +11,9 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+private slots:
+   void setAbstand(float abstand); // Definiere Slot
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
