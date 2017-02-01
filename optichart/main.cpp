@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
     const qreal radialMin = 0;
     const qreal radialMax = 100;
 
-
-
 /*    for (int winkel = angularMin; winkel <= angularMax; winkel += 5)
     {
        // int radius =  (winkel / radialMax) * radialMax;
