@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>268</width>
-    <height>301</height>
+    <width>371</width>
+    <height>375</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,14 +26,14 @@
       <item>
        <widget class="QLabel" name="Abschtanstext">
         <property name="text">
-         <string>Abstand:</string>
+         <string>Linien Länge :</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="abstand">
+       <widget class="QLabel" name="linienlaenge">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -53,9 +53,71 @@
      </layout>
     </item>
     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="bottomMargin">
+       <number>20</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Abstand : </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="abstand">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_4">
+      <property name="text">
+       <string>Druck(Winkel)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="text">
+         <string>Maximieren</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>Verkeinern</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
      <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>PushButton</string>
+       <string>Schließen</string>
       </property>
      </widget>
     </item>
@@ -66,7 +128,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>268</width>
+     <width>371</width>
      <height>17</height>
     </rect>
    </property>
@@ -98,12 +160,44 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>139</x>
-     <y>353</y>
+     <x>151</x>
+     <y>346</y>
     </hint>
     <hint type="destinationlabel">
      <x>123</x>
-     <y>359</y>
+     <y>339</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showMaximized()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>320</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>73</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showNormal()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>363</x>
+     <y>320</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>243</y>
     </hint>
    </hints>
   </connection>

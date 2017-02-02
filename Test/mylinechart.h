@@ -12,7 +12,7 @@ class MyLineChart : public QChartView
     Q_OBJECT
 
 signals:
- void setAbstand(float abstand);
+ void abstandGeaendert(float abstand);
 
 public:
     MyLineChart();
@@ -22,6 +22,7 @@ public:
 
     QPointF pointL;
     QPointF pointR;
+    QPointF pointP;
 
     QLineSeries *lin1;
 
