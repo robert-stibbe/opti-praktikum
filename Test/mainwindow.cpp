@@ -23,9 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(  ui->graphicsView, &MyLineChart::abstandGeaendert,
                        this,             &setAbstand );
 
-
-  QObject::connect(  ui->graphicsView, &MyLineChart::linienlaengeGeaendert,
-                               this,             &setLinienlaenge );
+    QObject::connect(  ui->graphicsView, &MyLineChart::linienlaengeGeaendert,
+                       this,             &setLinienlaenge );
     QLineSeries *series = new QLineSeries();
     series->append(0, 0);
     series->append(10, 10);
@@ -118,16 +117,55 @@ void MainWindow::on_pushButton_4_clicked()
     radialAxis->setRange(radialMin, radialMax);
     angularAxis->setRange(angularMin, angularMax);
 
-    PolarChart *chartView = new PolarChart();
+    QList<QPointF> oriWerte;
+    oriWerte.append( QPointF (0,10));
+    oriWerte.append( QPointF (45, 7));
+    oriWerte.append( QPointF (90, 5));
+    oriWerte.append( QPointF (135, 6));
+    oriWerte.append( QPointF (180, 8));
+    oriWerte.append( QPointF (210, 14));
+    oriWerte.append( QPointF (240, 22));
+    oriWerte.append( QPointF (270, 30));
+    oriWerte.append( QPointF (300, 40));
+    oriWerte.append( QPointF (320, 50));
+    oriWerte.append( QPointF (350, 70));
+    oriWerte.append( QPointF (360, 100));
+    oriWerte.append( QPointF (0, 100));
+    oriWerte.append( QPointF (5, 90));
+    oriWerte.append( QPointF (10, 80));
+    oriWerte.append( QPointF (20, 60));
+    oriWerte.append( QPointF (50, 45));
+    oriWerte.append( QPointF (60, 40));
+    oriWerte.append( QPointF (90, 35));
+    oriWerte.append( QPointF (110, 30));
+    oriWerte.append( QPointF (130, 26));
+    oriWerte.append( QPointF (150, 23));
+    oriWerte.append( QPointF (180, 20));
+    oriWerte.append( QPointF (210, 20));
+    oriWerte.append( QPointF (240, 20));
+    oriWerte.append( QPointF (270, 20));
+    oriWerte.append( QPointF (290, 18));
+    oriWerte.append( QPointF (310, 15));
+    oriWerte.append( QPointF (340, 12));
+    oriWerte.append( QPointF (360, 10));
+
+    QLineSeries *druckWerte = new  QLineSeries();
+    druckWerte->append(oriWerte);
+    chart->addSeries(druckWerte);
+
+/*
+  //  PolarChart *chartView = new PolarChart();
     chartView->setChart(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->initBasisWerte(angularAxis,radialAxis);
+*/
+   ui->graphicsView->setChart(chart);
 
-
-    QMainWindow window;
-    window.setCentralWidget(chartView);
-    window.resize(800, 600);
-    window.show();
 
 }
 
+
+void MainWindow::on_pushButton_5_clicked()
+{
+
+}

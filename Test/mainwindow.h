@@ -16,6 +16,8 @@ private slots:
    void setLinienlaenge(float abstand);
    void on_pushButton_4_clicked();
 
+   void on_pushButton_5_clicked();
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
