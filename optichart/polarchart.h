@@ -15,8 +15,8 @@ public:
     PolarChart(QWidget *parent = 0);
     void initBasisWerte(QtCharts::QValueAxis *angularAxis, QtCharts::QValueAxis *radialAxis);
 
-private slots:
-    void update();
+public slots:
+    void update(QValueAxis *angularAxis, QValueAxis *radialAxis);
 
 
 protected:

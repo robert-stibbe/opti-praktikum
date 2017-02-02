@@ -5,6 +5,7 @@
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QLineSeries>
 #include <QTimer>
+#include "path_reduction.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -20,9 +21,11 @@ PolarChart::PolarChart(QWidget *parent)
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(1);
+//    timer->start(1);
 }
-void PolarChart::update()
+
+void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
+
 {
     static std::random_device rd;
     static std::mt19937 e2(rd());
@@ -37,12 +40,23 @@ void PolarChart::update()
        zlist.append(QPointF( pt.rx(),pt.ry()+zufallsZahl));
     }
 
+    QVector<QPointF> reducewerte = reducePath( zlist.toVector(),  0.5 );
+    qDebug() << reducewerte.size() << " reduzierte Punkte ";
+
+
+
+   QLineSeries *reduzierteDruckwerte = new QLineSeries();
+   reduzierteDruckwerte->attachAxis(radialAxis);
+   reduzierteDruckwerte->attachAxis(angularAxis);
+   druckWerte2->attachAxis(radialAxis);
+   druckWerte2->attachAxis(angularAxis);
 //füge neue punkte hinzu
     druckWerte2->replace(zlist);
+     reduzierteDruckwerte->replace(reducewerte.toList());
     chart()->addSeries(druckWerte2);
-
+     chart()->addSeries(reduzierteDruckwerte);
    // repaint();
-    qDebug() << "Frame: " << ++frameZaehler;
+  //  qDebug() << "Frame: " << ++frameZaehler;
 }
 
 void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
@@ -52,12 +66,13 @@ void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
     marker1->append(90, 100);
 
 // erzeuge testpunkte
-  for (float phi=0; phi<360; phi+=0.05)
+  for (float phi=0; phi<360; phi+=3)
   {
       float druck = phi;
-      oriWerte.append( QPointF (phi, druck));
+      oriWerte.append( QPointF(phi, druck));
   }
   qDebug() << oriWerte.size() << " Punkte generiert!";
+
 
 
   /*
@@ -93,10 +108,12 @@ void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
   oriWerte.append( QPointF (360, 10));
   */
 /*
-  druckWerte->append(oriWerte);
-  chart()->addSeries(druckWerte);
-  druckWerte->attachAxis(radialAxis);
-  druckWerte->attachAxis(angularAxis);
+  druckWerte2->append(oriWerte);
+//  druckWerte2->append(reducewerte.toList());
+
+  chart()->addSeries(druckWerte2);
+  druckWerte2->attachAxis(radialAxis);
+  druckWerte2->attachAxis(angularAxis);
 */
 }
 
