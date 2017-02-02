@@ -13,6 +13,7 @@ class MyLineChart : public QChartView
 
 signals:
  void abstandGeaendert(float abstand);
+ void linienlaengeGeaendert(float abstand);
 
 public:
     MyLineChart();

@@ -22,7 +22,29 @@ qreal punktAbstand (QPointF pointL , QPointF pointR)
    return linienabstand;
 }
 
+qreal abstand (QLineF l, QPointF p )
+{
+    QPointF a = l.p1();
+    QPointF b = l.p2();
+    QPointF lVector = b - a ;
+    QPointF pVector = p - a ;
 
+    if (QPointF::dotProduct(lVector, pVector) <= 0)
+    {
+        return qSqrt (QPointF::dotProduct(pVector, pVector));
+    }
+    if (QPointF::dotProduct(lVector, pVector) >= QPointF::dotProduct(lVector, lVector) )
+    {
+      QPointF diff = pVector - lVector;
+      return qSqrt(QPointF::dotProduct(diff,diff));
+    }
+
+     qreal pp = QPointF::dotProduct(pVector, pVector) ;
+     qreal lp = QPointF::dotProduct(lVector, pVector);
+     qreal ll = QPointF::dotProduct(lVector, lVector);
+    return   qSqrt(pp - (lp*lp/ll) );
+}
+/*
 qreal abstand (QLineF l, QPointF p )
 {
     QPointF a = l.p1();
@@ -51,7 +73,7 @@ qreal abstand (QLineF l, QPointF p )
 
 
 }
-
+*/
 
 void MyLineChart::mousePressEvent(QMouseEvent *event)
 {
@@ -76,11 +98,12 @@ void MyLineChart::mousePressEvent(QMouseEvent *event)
 
    // qDebug() << "linienabstand: " << linienabstand;
    qreal linienLen = punktAbstand(pointL,pointR);
-   emit abstandGeaendert( linienLen );
+   emit linienlaengeGeaendert( linienLen );
 
    QLineF linie (pointL, pointR);
    qreal punktvonLinie = abstand(linie, pointP );
    qDebug() << "abstand punkt von linie: " << punktvonLinie;
+   emit abstandGeaendert( punktvonLinie );
 
 
      //entferne bisherige linien

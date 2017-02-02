@@ -13,7 +13,7 @@ class MainWindow : public QMainWindow
 
 private slots:
    void setAbstand(float abstand); // Definiere Slot
-
+   void setLinienlaenge(float abstand);
    void on_pushButton_4_clicked();
 
 public:

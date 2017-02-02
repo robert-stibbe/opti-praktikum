@@ -23,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(  ui->graphicsView, &MyLineChart::abstandGeaendert,
                        this,             &setAbstand );
 
+
+  QObject::connect(  ui->graphicsView, &MyLineChart::linienlaengeGeaendert,
+                               this,             &setLinienlaenge );
     QLineSeries *series = new QLineSeries();
     series->append(0, 0);
     series->append(10, 10);
@@ -73,6 +76,12 @@ void MainWindow::setAbstand(float abstand)
      ui->abstand->setText(a);
 }
 
+void MainWindow::setLinienlaenge(float abstand)
+{
+    QString a = QString::number(abstand);
+
+     ui->linienlaenge->setText(a);
+}
 void MainWindow::on_pushButton_4_clicked()
 {
 
