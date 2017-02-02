@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
     const qreal radialMin = 0;
     const qreal radialMax = 100;
 
-
-
 /*    for (int winkel = angularMin; winkel <= angularMax; winkel += 5)
     {
        // int radius =  (winkel / radialMax) * radialMax;
@@ -35,22 +33,20 @@ int main(int argc, char *argv[])
     QPolarChart *chart = new QPolarChart();
 
    // chart->addSeries(druckWerte);
-    chart->setTitle("Pfeiltasten rechts/links = drehen, +/- zum zoomen ,Lehrtaste zum wechseln.");
+    chart->setTitle("Leertaste zum Wechseln.");
 
     QValueAxis *angularAxis = new QValueAxis();
     angularAxis->setTickCount(10); // First and last ticks are co-located on 0/360 angle.
-    angularAxis->setLabelFormat("%.1f");
+
+    angularAxis->setLabelFormat(("%.1f Grad")); //%.0f \u00B0
     angularAxis->setShadesVisible(true);
     angularAxis->setShadesBrush(QBrush(QColor(249, 249, 255)));
     chart->addAxis(angularAxis, QPolarChart::PolarOrientationAngular);
 
     QValueAxis *radialAxis = new QValueAxis();
-    radialAxis->setTickCount(30);
-    radialAxis->setLabelFormat("%d");
+    radialAxis->setTickCount(20);
+    radialAxis->setLabelFormat("%d bar");
     chart->addAxis(radialAxis, QPolarChart::PolarOrientationRadial);
-
-
-
     radialAxis->setRange(radialMin, radialMax);
     angularAxis->setRange(angularMin, angularMax);
 

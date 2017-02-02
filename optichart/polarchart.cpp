@@ -16,12 +16,11 @@ long frameZaehler = 0;
 PolarChart::PolarChart(QWidget *parent)
     : QChartView(parent)
 {
+    druckWerte2 = new QLineSeries();
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(10);
-
-
+    timer->start(1);
 }
 void PolarChart::update()
 {
@@ -29,13 +28,7 @@ void PolarChart::update()
     static std::mt19937 e2(rd());
     static std::normal_distribution<> dist(MITTELWERT, ABWEICHUNG);
 
-    QChart *oldChart = chart();
-
-    QList<QAbstractSeries *> oldseriesList = oldChart->series();
-    foreach (QAbstractSeries *series, oldseriesList)
-    {
-       oldChart->removeSeries(series);
-    }
+//addiere zufallszahlen zu Druckwert
     QList<QPointF> zlist;
     foreach (QPointF pt, oriWerte)
     {
@@ -44,25 +37,25 @@ void PolarChart::update()
        zlist.append(QPointF( pt.rx(),pt.ry()+zufallsZahl));
     }
 
-    QLineSeries *druckWerte2 = new QLineSeries();
-    druckWerte2->append(zlist);
+//füge neue punkte hinzu
+    druckWerte2->replace(zlist);
     chart()->addSeries(druckWerte2);
 
- //   qDebug() << "repaint";
-    repaint();
-    //qDebug() << "Frame: " << ++frameZaehler;
+   // repaint();
+    qDebug() << "Frame: " << ++frameZaehler;
 }
+
 void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
 {
-//  druckWerte = new QLineSeries();
-  //druckWerte->setName("Druck");
+    QLineSeries *marker1 = new QLineSeries();
+    marker1->append(0, 0);
+    marker1->append(90, 100);
 
-  for (float phi=0; phi<360; phi+=1)
+// erzeuge testpunkte
+  for (float phi=0; phi<360; phi+=0.05)
   {
-      float r = phi;
-      oriWerte.append( QPointF (phi, 3*r));
-     // oriWerte.append( QPointF (phi, 2*r));
-
+      float druck = phi;
+      oriWerte.append( QPointF (phi, druck));
   }
   qDebug() << oriWerte.size() << " Punkte generiert!";
 
@@ -131,9 +124,6 @@ void PolarChart::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
         switchChartType();
         break;
-
-
-
     default:
         QGraphicsView::keyPressEvent(event);
         break;
@@ -166,6 +156,7 @@ void PolarChart::switchChartType()
         oldChart->removeAxis(axis);
         newChart->addAxis(axis, axis->alignment());
     }
+
 
     foreach (QAbstractSeries *series, seriesList) {
         newChart->addSeries(series);
