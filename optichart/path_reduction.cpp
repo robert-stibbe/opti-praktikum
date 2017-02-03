@@ -16,7 +16,7 @@ static qreal abstand( const QLineF & line,
     return p.length();
   if ( QVector2D::dotProduct( p-l, l ) > 0 )
     return (p-l).length();
-  return sqrt( p.lengthSquared() - pl*pl/l.lengthSquared() );
+  return std::sqrt( std::abs( p.lengthSquared() - pl*pl/l.lengthSquared()));
 }
 
 
@@ -43,7 +43,7 @@ static void reducePathImpl( QVector<QPointF> & out,
   }
   if ( maxAbstand <= epsilon )
     return;
-  reducePathImpl( out, points, maxAbstandIndex, epsilon );
+  reducePathImpl( out, points, maxAbstandIndex+1, epsilon );
   out.push_back( points[maxAbstandIndex] );
   reducePathImpl( out, points+maxAbstandIndex, nPoints - maxAbstandIndex, epsilon );
 }

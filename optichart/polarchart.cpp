@@ -10,7 +10,7 @@
 QT_CHARTS_USE_NAMESPACE
 
 const int MITTELWERT = 0;
-const int ABWEICHUNG = 5;
+const int ABWEICHUNG = 40;
 
 long frameZaehler = 0;
 
@@ -29,18 +29,23 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
 {
     static std::random_device rd;
     static std::mt19937 e2(rd());
-    static std::normal_distribution<> dist(MITTELWERT, ABWEICHUNG);
+    static std::normal_distribution<qreal> dist(MITTELWERT, ABWEICHUNG);
 
 //addiere zufallszahlen zu Druckwert
     QList<QPointF> zlist;
+    qreal y1 = 0;
+    qreal y2 = 0;
     foreach (QPointF pt, oriWerte)
     {
-       int zufallsZahl = std::round(dist(e2));
+       qreal zufallsZahl = dist(e2);
        //  qDebug() << zufallsZahl;
-       zlist.append(QPointF( pt.rx(),pt.ry()+zufallsZahl));
+       const qreal factor = 0.05;
+       y1 = ( pt.ry()+zufallsZahl ) * factor + y1 * (1-factor);
+       y2 = ( y1                  ) * factor + y2 * (1-factor);
+       zlist.append(QPointF( pt.rx(),y2 ) );
     }
 
-    QVector<QPointF> reducewerte = reducePath( zlist.toVector(),  0.5 );
+    QVector<QPointF> reducewerte = reducePath( zlist.toVector(),  3 );
     qDebug() << reducewerte.size() << " reduzierte Punkte ";
 
 
@@ -66,9 +71,9 @@ void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
     marker1->append(90, 100);
 
 // erzeuge testpunkte
-  for (float phi=0; phi<360; phi+=3)
+  for (float phi=0; phi<360; phi+=0.1)
   {
-      float druck = phi;
+      float druck = phi/3.6;
       oriWerte.append( QPointF(phi, druck));
   }
   qDebug() << oriWerte.size() << " Punkte generiert!";
