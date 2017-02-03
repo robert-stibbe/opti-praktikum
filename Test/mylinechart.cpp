@@ -85,10 +85,12 @@ void MyLineChart::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::RightButton)
     {
         pointR = chartPos;
+//        pointP = chartPos;
     }
     else if (event->button() == Qt::LeftButton)
     {
         pointL = chartPos;
+//       pointP = chartPos;
     }
     else if (event->button() == Qt::BackButton)
     {
