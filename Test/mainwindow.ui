@@ -26,7 +26,7 @@
       <item>
        <widget class="QLabel" name="Abschtanstext">
         <property name="text">
-         <string>Linien Länge :</string>
+         <string>Linienlänge :</string>
         </property>
        </widget>
       </item>
@@ -104,14 +104,14 @@
       <item>
        <widget class="QPushButton" name="pushButton_5">
         <property name="text">
-         <string>Test Daten</string>
+         <string>Testdaten</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_6">
         <property name="text">
-         <string>Punkte vermessung</string>
+         <string>Abstand Linie Punkt</string>
         </property>
        </widget>
       </item>

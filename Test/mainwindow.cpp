@@ -41,7 +41,7 @@ void MainWindow::showTestdaten(Dtyp datentyp)
     QPolarChart *chart = new QPolarChart();
 
    // chart->addSeries(druckWerte);
-    chart->setTitle("Leertaste zum Wechseln.");
+  //  chart->setTitle("Leertaste zum Wechseln.");
 
     QValueAxis *angularAxis = new QValueAxis();
     angularAxis->setTickCount(10); // First and last ticks are co-located on 0/360 angle.
@@ -154,7 +154,7 @@ series1->append(6,6);
 
 //  chartView->setRenderHint(QPainter::Antialiasing);
 //   chart->createDefaultAxes();
- chart->setTitle("Klicke auf den Chart : linke und rechte Maustaste = linie1 backbutton = punkt ");
+ chart->setTitle("Klicke auf den Chart : linke und rechte Maustaste = linie backbutton der Maus = punkt ");
 
 //     MyLineChart *chartView = new MyLineChart();
 //   chartView->setChart(chart);
