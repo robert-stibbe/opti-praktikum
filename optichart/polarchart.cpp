@@ -4,6 +4,7 @@
 #include <QtCharts/QAbstractAxis>
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QLineSeries>
+#include <QTime>
 #include <QTimer>
 #include "path_reduction.h"
 
@@ -45,8 +46,11 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
        zlist.append(QPointF( pt.rx(),y2 ) );
     }
 
+    QTime t;
+    t.start();
+
     QVector<QPointF> reducewerte = reducePath( zlist.toVector(),  3 );
-    qDebug() << reducewerte.size() << " reduzierte Punkte ";
+    qDebug() << reducewerte.size() << " reduzierte Punkte. Benötigte Zeit: " << t.elapsed();
 
 
 
@@ -58,10 +62,10 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
 //füge neue punkte hinzu
     druckWerte2->replace(zlist);
      reduzierteDruckwerte->replace(reducewerte.toList());
-    chart()->addSeries(druckWerte2);
-     chart()->addSeries(reduzierteDruckwerte);
+   // chart()->addSeries(druckWerte2);
+    chart()->addSeries(reduzierteDruckwerte);
    // repaint();
-  //  qDebug() << "Frame: " << ++frameZaehler;
+    qDebug() << "Frame: " << ++frameZaehler;
 }
 
 void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
@@ -71,7 +75,7 @@ void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
     marker1->append(90, 100);
 
 // erzeuge testpunkte
-  for (float phi=0; phi<360; phi+=0.1)
+  for (float phi=0; phi<360; phi+=0.00001)
   {
       float druck = phi/3.6;
       oriWerte.append( QPointF(phi, druck));
