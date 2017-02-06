@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "mylinechart.h"
 #include "ui_mainwindow.h"
-
+#include <QtCore/QDebug>
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
 
@@ -19,9 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    timer = new QTimer(this);
-    QObject::connect(  timer,            &QTimer::timeout,
-                       ui->graphicsView, &MyLineChart::update);
+
 }
 
 MainWindow::~MainWindow()
@@ -37,7 +35,7 @@ void MainWindow::showAchsen()
     const qreal radialMin = 0;
     const qreal radialMax = 100;
 
-    timer->stop();
+
 
 
     QPolarChart *chart = new QPolarChart();
@@ -66,6 +64,8 @@ void MainWindow::showAchsen()
 
 void MainWindow::showTestdaten(Dtyp datentyp)
 {
+    ui->graphicsView->stopDenBloedenTimer();
+    ui->stackedWidget->setCurrentIndex(2);
     showAchsen();
 
     QList<QPointF> oriWerte;
@@ -120,6 +120,7 @@ void MainWindow::showTestdaten(Dtyp datentyp)
 
 void MainWindow::showPunktevermessung()
 {
+
 // Verbinde Signal und Slot für Abstand und Linienlänge
     QObject::connect(  ui->graphicsView, &MyLineChart::abstandGeaendert,
                        this,             &setAbstand );
@@ -153,7 +154,6 @@ void MainWindow::setLinienlaenge(float abstand)
 
 void MainWindow::on_pushButton_4_clicked()
 {
-
     showTestdaten(VIERTAKT);
 }
 
@@ -165,7 +165,7 @@ void MainWindow::on_pushButton_5_clicked()  //Test daten
 
 void MainWindow::on_pushButton_6_clicked()  // Punkte vermesung
 {
-    timer->stop();
+     ui->stackedWidget->setCurrentIndex(3);
     showPunktevermessung();
 }
 
@@ -176,11 +176,33 @@ void MainWindow::on_diagrammtypUmschalter_clicked()
 
 void MainWindow::on_pushButton_7_clicked()
 {
+    ui->stackedWidget->setCurrentIndex(1);
     showAchsen();
     ui->graphicsView->initBasisWerte();
 
 
 
     //connect(timer, SIGNAL(timeout()), this, SLOT(ui->graphicsView->update()));
-    timer->start(1);
+
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+     ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+     QString s = ui->schrittweite1->text();
+     bool ok;
+     double sw =  s.toFloat(&ok);
+     if (ok)
+     {
+         ui->graphicsView->setSchrittweite( sw );
+         qDebug() << "schrittweite " << sw;
+     }
+     else
+     {
+         qDebug() << "schrittweite falsch " << sw;
+     }
 }

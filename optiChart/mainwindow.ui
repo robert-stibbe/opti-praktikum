@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>396</width>
-    <height>375</height>
+    <width>1017</width>
+    <height>963</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,80 +16,12 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <property name="sizeConstraint">
          <enum>QLayout::SetMaximumSize</enum>
         </property>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <property name="bottomMargin">
-           <number>6</number>
-          </property>
-          <item>
-           <widget class="QLabel" name="Abschtanstext">
-            <property name="text">
-             <string>Linienlänge :</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="linienlaenge">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <property name="bottomMargin">
-           <number>3</number>
-          </property>
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Abstand : </string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="abstand">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
         <item>
          <widget class="QPushButton" name="pushButton_4">
           <property name="text">
@@ -129,6 +61,135 @@
           <property name="text">
            <string>Optimierung</string>
           </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QStackedWidget" name="stackedWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page_4"/>
+          <widget class="QWidget" name="page">
+           <widget class="QLineEdit" name="schrittweite1">
+            <property name="geometry">
+             <rect>
+              <x>50</x>
+              <y>40</y>
+              <width>51</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>0.5</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_2">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>80</y>
+              <width>81</width>
+              <height>20</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_2">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>40</y>
+              <width>41</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Schrittweite</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_9">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>110</y>
+              <width>111</width>
+              <height>71</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Übernehmen</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="page_2">
+           <widget class="QLineEdit" name="lineEdit_3">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>40</y>
+              <width>81</width>
+              <height>20</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="page_3">
+           <widget class="QWidget" name="horizontalLayoutWidget_2">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>60</y>
+              <width>281</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,4">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="Abschtanstext">
+               <property name="text">
+                <string>Linienlänge :</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="linienlaenge">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="horizontalLayoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>30</y>
+              <width>131</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Abstand : </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="abstand">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="page_5"/>
          </widget>
         </item>
         <item>
@@ -176,12 +237,6 @@
       </item>
       <item>
        <widget class="MyLineChart" name="graphicsView">
-        <property name="minimumSize">
-         <size>
-          <width>900</width>
-          <height>900</height>
-         </size>
-        </property>
         <property name="baseSize">
          <size>
           <width>500</width>
@@ -199,7 +254,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>396</width>
+     <width>1017</width>
      <height>17</height>
     </rect>
    </property>
@@ -231,8 +286,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>151</x>
-     <y>346</y>
+     <x>107</x>
+     <y>932</y>
     </hint>
     <hint type="destinationlabel">
      <x>123</x>
@@ -247,8 +302,8 @@
    <slot>showMaximized()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>54</x>
-     <y>320</y>
+     <x>62</x>
+     <y>892</y>
     </hint>
     <hint type="destinationlabel">
      <x>73</x>
@@ -263,8 +318,8 @@
    <slot>showNormal()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>363</x>
-     <y>320</y>
+     <x>107</x>
+     <y>912</y>
     </hint>
     <hint type="destinationlabel">
      <x>205</x>

@@ -25,6 +25,8 @@ public:
 
     void initBasisWerte();
 
+    void setSchrittweite(double sw);
+    void stopDenBloedenTimer();
 private:
     QPointF pointL;
     QPointF pointR;
@@ -34,6 +36,8 @@ private:
     QLineSeries *lin1;
     QScatterSeries *series1;
     QLineSeries *druckWerte2 ;
+    float schrittweite1;
+     QTimer *timer;
 
 public slots:
     void update();

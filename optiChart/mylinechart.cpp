@@ -5,6 +5,7 @@
 #include <QtCharts/QLineSeries>
 #include <QPolarChart>
 #include <QScatterSeries>
+#include <QTimer>
 #include <QValueAxis>
 
 const int MITTELWERT = 0;
@@ -16,19 +17,23 @@ long frameZaehler = 0;
 // Klick auf Chart setzt Linienpunkte und den Abstandspunkt
 MyLineChart::MyLineChart()
 {
-       druckWerte2 = new QLineSeries ();
-       QList<QPointF> zlist;
-       zlist.append(QPointF(0,0));
-       druckWerte2->append(zlist);
 }
 
 MyLineChart::MyLineChart(QWidget *parent )
 {
-
+    timer = new QTimer(this);
+    QObject::connect(  timer,            &QTimer::timeout,
+                   this, &MyLineChart::update);
+   schrittweite1 = 0.5;
+   druckWerte2 = new QLineSeries ();
+   QList<QPointF> zlist;
+   zlist.append(QPointF(0,0));
+   druckWerte2->append(zlist);
 }
 
 MyLineChart::initMyChart()
 {
+    timer->stop();
      lin1 = new QLineSeries();
      series1 = new QScatterSeries();
 
@@ -110,7 +115,8 @@ qreal abstand (QLineF l, QPointF p )
 
 void MyLineChart::keyPressEvent(QKeyEvent *event)
 {
-    switch (event->key()) {
+    switch (event->key())
+    {
     case Qt::Key_Plus:
         chart()->zoomIn();
         break;
@@ -221,7 +227,7 @@ void MyLineChart::update()
     chart()->addSeries(druckWerte2);
 
    // repaint();
-    qDebug() << "Frame: " << ++frameZaehler;
+   // qDebug() << "Frame: " << ++frameZaehler;
 }
 
 void MyLineChart::initBasisWerte()
@@ -231,13 +237,18 @@ void MyLineChart::initBasisWerte()
     marker1->append(90, 100);
 
 // erzeuge testpunkte
-  for (float phi=0; phi<360; phi+=0.05)
-  {
-      float druck = phi;
-      oriWerte.append( QPointF (phi, druck));
-  }
+    oriWerte.clear();
 
-  qDebug() << oriWerte.size() << " Punkte generiert!";
+    qDebug() << "schrittweite " << schrittweite1;
+
+    for (float phi=0; phi<360; phi+= schrittweite1)
+    {
+       float druck = phi;
+       oriWerte.append( QPointF (phi, druck));
+    }
+
+    qDebug() << oriWerte.size() << " Punkte generiert!";
+    timer->start(1);
 }
 
 void MyLineChart::switchChartType()
@@ -255,7 +266,8 @@ void MyLineChart::switchChartType()
     QList<QAbstractAxis *> axisList = oldChart->axes();
     QList<QPair<qreal, qreal> > axisRanges;
 
-    foreach (QAbstractAxis *axis, axisList) {
+    foreach (QAbstractAxis *axis, axisList)
+    {
         QValueAxis *valueAxis = static_cast<QValueAxis *>(axis);
         axisRanges.append(QPair<qreal, qreal>(valueAxis->min(), valueAxis->max()));
     }
@@ -263,20 +275,23 @@ void MyLineChart::switchChartType()
     foreach (QAbstractSeries *series, seriesList)
         oldChart->removeSeries(series);
 
-    foreach (QAbstractAxis *axis, axisList) {
+    foreach (QAbstractAxis *axis, axisList)
+    {
         oldChart->removeAxis(axis);
         newChart->addAxis(axis, axis->alignment());
     }
 
 
-    foreach (QAbstractSeries *series, seriesList) {
+    foreach (QAbstractSeries *series, seriesList)
+    {
         newChart->addSeries(series);
         foreach (QAbstractAxis *axis, axisList)
             series->attachAxis(axis);
     }
 
     int count = 0;
-    foreach (QAbstractAxis *axis, axisList) {
+    foreach (QAbstractAxis *axis, axisList)
+    {
         axis->setRange(axisRanges[count].first, axisRanges[count].second);
         count++;
     }
@@ -286,3 +301,14 @@ void MyLineChart::switchChartType()
     delete oldChart;
 }
 
+void MyLineChart::setSchrittweite(double sw)
+{
+
+    schrittweite1 = sw ;
+    initBasisWerte ();
+}
+
+void MyLineChart::stopDenBloedenTimer()
+{
+    timer->stop();
+}
