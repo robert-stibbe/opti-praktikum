@@ -21,12 +21,21 @@ private slots:
 
    void on_pushButton_6_clicked();
 
+   void on_diagrammtypUmschalter_clicked();
+
+   void on_pushButton_7_clicked();
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     enum Dtyp {VIERTAKT, LINEAR, MICRO};
+
+    void showAchsen();
+
 private:
     Ui::MainWindow *ui;
+    QTimer *timer;
+
    void showPunktevermessung();
    void showTestdaten(Dtyp datentyp);
 };

@@ -23,11 +23,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mylinechart.cpp \
-    polarchart.cpp
+    mylinechart.cpp
 
 HEADERS  += mainwindow.h \
-    mylinechart.h \
-    polarchart.h
+    mylinechart.h
 
 FORMS    += mainwindow.ui

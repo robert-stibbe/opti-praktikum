@@ -3,6 +3,7 @@
 
 #include <QLineSeries>
 #include <QObject>
+#include <QScatterSeries>
 #include <QtCharts/QChartView>
 
 QT_CHARTS_USE_NAMESPACE
@@ -19,13 +20,27 @@ public:
     MyLineChart();
     MyLineChart(QWidget *parent = Q_NULLPTR);
 
-    void mousePressEvent(QMouseEvent *event);
+    void switchChartType();
+    initMyChart();
 
+    void initBasisWerte();
+
+private:
     QPointF pointL;
     QPointF pointR;
     QPointF pointP;
 
+    QList<QPointF> oriWerte;
     QLineSeries *lin1;
+    QScatterSeries *series1;
+    QLineSeries *druckWerte2 ;
+
+public slots:
+    void update();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent *event);
 
 };
 

@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "mylinechart.h"
-#include "polarchart.h"
 #include "ui_mainwindow.h"
 
 #include <QtCharts/QChart>
@@ -8,6 +7,7 @@
 
 #include <QPolarChart>
 #include <QScatterSeries>
+#include <QTimer>
 #include <QValueAxis>
 
 
@@ -19,7 +19,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
+    timer = new QTimer(this);
+    QObject::connect(  timer,            &QTimer::timeout,
+                       ui->graphicsView, &MyLineChart::update);
 }
 
 MainWindow::~MainWindow()
@@ -27,15 +29,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::showTestdaten(Dtyp datentyp)
+void MainWindow::showAchsen()
 {
-
     const qreal angularMin = 0;
     const qreal angularMax = 360;
 
     const qreal radialMin = 0;
     const qreal radialMax = 100;
 
+    timer->stop();
 
 
     QPolarChart *chart = new QPolarChart();
@@ -44,7 +46,7 @@ void MainWindow::showTestdaten(Dtyp datentyp)
   //  chart->setTitle("Leertaste zum Wechseln.");
 
     QValueAxis *angularAxis = new QValueAxis();
-    angularAxis->setTickCount(10); // First and last ticks are co-located on 0/360 angle.
+    angularAxis->setTickCount(9); // First and last ticks are co-located on 0/360 angle.
 
     angularAxis->setLabelFormat(("%.1f Grad")); //%.0f \u00B0
     angularAxis->setShadesVisible(true);
@@ -52,11 +54,19 @@ void MainWindow::showTestdaten(Dtyp datentyp)
     chart->addAxis(angularAxis, QPolarChart::PolarOrientationAngular);
 
     QValueAxis *radialAxis = new QValueAxis();
-    radialAxis->setTickCount(20);
+    radialAxis->setTickCount(10);
     radialAxis->setLabelFormat("%d bar");
     chart->addAxis(radialAxis, QPolarChart::PolarOrientationRadial);
     radialAxis->setRange(radialMin, radialMax);
     angularAxis->setRange(angularMin, angularMax);
+
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+    ui->graphicsView->setChart(chart);
+}
+
+void MainWindow::showTestdaten(Dtyp datentyp)
+{
+    showAchsen();
 
     QList<QPointF> oriWerte;
     if (datentyp == VIERTAKT)
@@ -94,7 +104,7 @@ void MainWindow::showTestdaten(Dtyp datentyp)
     }
     if (datentyp == LINEAR)
     {
-        for (int winkel = angularMin; winkel <= angularMax; winkel += 5)
+        for (int winkel = 0; winkel <= 360; winkel += 5)
            {
               // int radius =  (winkel / radialMax) * radialMax;
               // int radius = (1 + sin(winkel / 360.0 * 2*3.141592653589793238 ) ) / 2 * (radialMax - radialMin) +radialMin;
@@ -104,62 +114,25 @@ void MainWindow::showTestdaten(Dtyp datentyp)
     }
     QLineSeries *druckWerte = new  QLineSeries();
     druckWerte->append(oriWerte);
-    chart->addSeries(druckWerte);
-
-/*
-  //  PolarChart *chartView = new PolarChart();
-    chartView->setChart(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-    chartView->initBasisWerte(angularAxis,radialAxis);
-*/
-   ui->graphicsView->setChart(chart);
+    ui->graphicsView->chart()->addSeries(druckWerte);
 
 }
 
 void MainWindow::showPunktevermessung()
 {
-// Verbinde Signal und Slot
-QObject::connect(  ui->graphicsView, &MyLineChart::abstandGeaendert,
-                   this,             &setAbstand );
+// Verbinde Signal und Slot für Abstand und Linienlänge
+    QObject::connect(  ui->graphicsView, &MyLineChart::abstandGeaendert,
+                       this,             &setAbstand );
 
-QObject::connect(  ui->graphicsView, &MyLineChart::linienlaengeGeaendert,
-                   this,             &setLinienlaenge );
-QLineSeries *series = new QLineSeries();
-series->append(0, 0);
-series->append(10, 10);
-
-QScatterSeries *series1 = new QScatterSeries();
-series1->append(5,5);
-series1->append(6,6);
-
- QChart *chart = new QChart();
- chart->legend()->hide();
- chart->addSeries(series1);
-
- QValueAxis *xAxis = new QValueAxis();
- xAxis->setTickCount(10);
-
- xAxis->setLabelFormat(("%.1f ")); //%.0f \u00B0
- xAxis->setShadesVisible(true);
- xAxis->setShadesBrush(QBrush(QColor(249, 249, 255)));
- chart->addAxis(xAxis, Qt::AlignLeft);
-
- QValueAxis *yAxis = new QValueAxis();
- yAxis->setTickCount(10);
- yAxis->setLabelFormat("%d ");
- chart->addAxis(yAxis, Qt::AlignBottom);
- yAxis->setRange(0, 10);
- xAxis->setRange(0, 10);
+    QObject::connect(  ui->graphicsView, &MyLineChart::linienlaengeGeaendert,
+                       this,             &setLinienlaenge );
 
 
-//  chartView->setRenderHint(QPainter::Antialiasing);
-//   chart->createDefaultAxes();
- chart->setTitle("Klicke auf den Chart : linke und rechte Maustaste = linie backbutton der Maus = punkt ");
+    QChart *chart = new QChart(); // Erzeuge Liniendiagramm
+    chart->legend()->hide();
+    ui->graphicsView->setChart(chart); // ui graphicsView ist vom Typ MyLineCharft
 
-//     MyLineChart *chartView = new MyLineChart();
-//   chartView->setChart(chart);
-
-ui->graphicsView->setChart(chart);
+    ui->graphicsView->initMyChart();
 }
 
 void MainWindow::setAbstand(float abstand)
@@ -180,6 +153,7 @@ void MainWindow::setLinienlaenge(float abstand)
 
 void MainWindow::on_pushButton_4_clicked()
 {
+
     showTestdaten(VIERTAKT);
 }
 
@@ -191,5 +165,22 @@ void MainWindow::on_pushButton_5_clicked()  //Test daten
 
 void MainWindow::on_pushButton_6_clicked()  // Punkte vermesung
 {
+    timer->stop();
     showPunktevermessung();
+}
+
+void MainWindow::on_diagrammtypUmschalter_clicked()
+{
+    ui->graphicsView->switchChartType();
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    showAchsen();
+    ui->graphicsView->initBasisWerte();
+
+
+
+    //connect(timer, SIGNAL(timeout()), this, SLOT(ui->graphicsView->update()));
+    timer->start(1);
 }

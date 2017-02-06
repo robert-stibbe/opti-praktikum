@@ -75,7 +75,7 @@ void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
     marker1->append(90, 100);
 
 // erzeuge testpunkte
-  for (float phi=0; phi<360; phi+=0.00001)
+  for (float phi=0; phi<360; phi+=0.001)
   {
       float druck = phi/3.6;
       oriWerte.append( QPointF(phi, druck));
