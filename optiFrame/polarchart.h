@@ -26,7 +26,10 @@ private:
     void switchChartType();
 //   QList<QAbstractSeries *> oriSeriesList ;
     QList<QPointF> oriWerte;
-    QLineSeries *druckWerte2 ;
+    QLineSeries *druckWerte ;
+    QLineSeries *reduzierteDruckwerte;
+    QLineSeries *reduzierteDruckwerte2;
+    bool isOriSichtbar;
 };
 
 #endif // POLARCHART_H
