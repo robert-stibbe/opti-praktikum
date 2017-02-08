@@ -18,8 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -34,9 +32,6 @@ void MainWindow::showAchsen()
 
     const qreal radialMin = 0;
     const qreal radialMax = 100;
-
-
-
 
     QPolarChart *chart = new QPolarChart();
 
@@ -115,19 +110,16 @@ void MainWindow::showTestdaten(Dtyp datentyp)
     QLineSeries *druckWerte = new  QLineSeries();
     druckWerte->append(oriWerte);
     ui->graphicsView->chart()->addSeries(druckWerte);
-
 }
 
 void MainWindow::showPunktevermessung()
 {
-
 // Verbinde Signal und Slot für Abstand und Linienlänge
     QObject::connect(  ui->graphicsView, &MyLineChart::abstandGeaendert,
                        this,             &setAbstand );
 
     QObject::connect(  ui->graphicsView, &MyLineChart::linienlaengeGeaendert,
                        this,             &setLinienlaenge );
-
 
     QChart *chart = new QChart(); // Erzeuge Liniendiagramm
     chart->legend()->hide();
@@ -138,12 +130,10 @@ void MainWindow::showPunktevermessung()
 
 void MainWindow::setAbstand(float abstand)
 {
-
     QString a = QString::number(abstand);
 
      ui->abstand->setText(a);
 }
-
 
 void MainWindow::setLinienlaenge(float abstand)
 {
@@ -158,14 +148,14 @@ void MainWindow::on_pushButton_4_clicked()
 }
 
 
-void MainWindow::on_pushButton_5_clicked()  //Test daten
+void MainWindow::on_pushButton_5_clicked()  //Testdaten
 {
     showTestdaten(LINEAR);
 }
 
-void MainWindow::on_pushButton_6_clicked()  // Punkte vermesung
+void MainWindow::on_pushButton_6_clicked()  // Punktevermessung
 {
-     ui->stackedWidget->setCurrentIndex(3);
+    ui->stackedWidget->setCurrentIndex(3);
     showPunktevermessung();
 }
 
@@ -180,10 +170,7 @@ void MainWindow::on_pushButton_7_clicked()
     showAchsen();
     ui->graphicsView->initBasisWerte();
 
-
-
     //connect(timer, SIGNAL(timeout()), this, SLOT(ui->graphicsView->update()));
-
 }
 
 void MainWindow::on_pushButton_8_clicked()
