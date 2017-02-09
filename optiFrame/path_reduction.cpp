@@ -162,7 +162,6 @@ static void check(
     for ( int j = idxs[i-1]+1; j < idxs[i]; ++j )
     {
       const auto dist = abstand( line, points[j] );
-      assert( dist <= epsilon * 1.01 );
     }
   }
 }

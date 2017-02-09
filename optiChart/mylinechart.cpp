@@ -33,10 +33,9 @@ MyLineChart::MyLineChart(QWidget *parent )
 
 MyLineChart::initMyChart()
 {
-    timer->stop();
+     timer->stop();
      lin1 = new QLineSeries();
      series1 = new QScatterSeries();
-
 
     /*
     QLineSeries *series = new QLineSeries();
@@ -68,7 +67,6 @@ MyLineChart::initMyChart()
      series1->attachAxis(yAxis);
      chart()->addAxis(yAxis, Qt::AlignBottom);
 
-    //
     //   chart->createDefaultAxes();
      chart()->setTitle("Klicke auf den Chart : linke und rechte Maustaste = linie backbutton der Maus = punkt ");
 
@@ -79,7 +77,6 @@ MyLineChart::initMyChart()
 //     lin1->append(4,4);
      chart()->addSeries(lin1);//leere liste
      chart()->addSeries(series1);//leere liste
-
 }
 
 qreal punktAbstand (QPointF pointL , QPointF pointR)
@@ -190,13 +187,12 @@ void MyLineChart::mousePressEvent(QMouseEvent *event)
      //  series1->replace(0, pointP);
    }
 
-    qDebug() << "Linie: " << lin1->points();
-    qDebug() << "PunktL" << pointL;
-    qDebug() << "PunktR" << pointR;
+   qDebug() << "Linie: " << lin1->points();
+   qDebug() << "PunktL" << pointL;
+   qDebug() << "PunktR" << pointR;
     // repaint();
    // update();
 
-//    event->accept(); // A no-op, but I will do it anyway!!!
 }
 
 
@@ -210,7 +206,7 @@ void MyLineChart::update()
     QList<QPointF> zlist;
     foreach (QPointF pt, oriWerte)
     {
-       int zufallsZahl = std::round(dist(e2));
+       double zufallsZahl = dist(e2);
        //  qDebug() << zufallsZahl;
        zlist.append(QPointF( pt.rx(),pt.ry()+zufallsZahl));
     }
