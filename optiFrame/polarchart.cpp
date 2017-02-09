@@ -10,8 +10,10 @@
 
 QT_CHARTS_USE_NAMESPACE
 
-const int MITTELWERT = 0;
-const int ABWEICHUNG = 40;
+static const auto MITTELWERT = 0.0;
+static const auto increment  = 0.0001;
+static const auto ABWEICHUNG = 3 / std::sqrt(increment);
+static const auto epsilon = 0.1;
 
 long frameZaehler = 0;
 
@@ -40,7 +42,7 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
     {
        qreal zufallsZahl = dist(e2);
        //  qDebug() << zufallsZahl;
-       const qreal factor = 0.05;
+       const qreal factor = increment;
        y1 = ( pt.ry()+zufallsZahl ) * factor + y1 * (1-factor);
        y2 = ( y1                  ) * factor + y2 * (1-factor);
        zlist.append(QPointF( pt.rx(),y2 ) );
@@ -49,7 +51,11 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
     QTime t;
     t.start();
 
-    QVector<QPointF> reducewerte = reducePath( zlist.toVector(),  3 );
+//    QVector<QPointF> reducewerte = reducePathRalph( zlist.toVector(),  epsilon );
+//    QVector<QPointF> reducewerte = reducePathLang( zlist.toVector(),  epsilon );
+    QVector<QPointF> reducewerte = reducePathDouglasPeucker( zlist.toVector(),  epsilon );
+//    QVector<QPointF> reducewerte = reducePathDouglasPeucker( reducePathRalph( zlist.toVector(),  epsilon/2 ), epsilon/2 );
+//    QVector<QPointF> reducewerte = reducePathDouglasPeucker( reducePathLang( zlist.toVector(),  epsilon/2 ), epsilon/2 );
     qDebug() << reducewerte.size() << " reduzierte Punkte. Benötigte Zeit: " << t.elapsed();
 
 
@@ -75,7 +81,7 @@ void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
     marker1->append(90, 100);
 
 // erzeuge testpunkte
-  for (float phi=0; phi<360; phi+=0.001)
+  for (float phi=0; phi<360; phi+=increment)
   {
       float druck = phi/3.6;
       oriWerte.append( QPointF(phi, druck));
