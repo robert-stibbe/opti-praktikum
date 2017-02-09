@@ -3,4 +3,17 @@
 #include <QVector>
 #include <QPointF>
 
-QVector<QPointF> reducePath( const QVector<QPointF> & points, qreal epsilon );
+QVector<QPointF> reducePathDouglasPeucker(
+    const QVector<QPointF> & points,
+    const qreal epsilon
+    );
+
+QVector<QPointF> reducePathLang(
+    const QVector<QPointF> & points,
+    const qreal epsilon
+    );
+
+QVector<QPointF> reducePathRalph(
+    const QVector<QPointF> & points,
+    const qreal epsilon
+    );
