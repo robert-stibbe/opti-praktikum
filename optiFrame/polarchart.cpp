@@ -27,11 +27,12 @@ PolarChart::PolarChart(QWidget *parent)
 }
 
 void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
-
 {
     static std::random_device rd;
     static std::mt19937 e2(rd());
     static std::normal_distribution<qreal> dist(MITTELWERT, ABWEICHUNG);
+
+    switchChartType();
 
 //addiere zufallszahlen zu Druckwert
     QList<QPointF> zlist;
@@ -49,13 +50,16 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
 
     QTime t;
     t.start();
-
     QVector<QPointF> reducewerte = reducePath( zlist.toVector(),  3 );
     qDebug() << reducewerte.size() << "epsilon = 3 reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
 
-     t.start();
+    t.start();
     QVector<QPointF> reducewerte2 = reducePath( zlist.toVector(),  5 );
-    qDebug() << reducewerte2.size() << "epsilon = 2 reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
+    qDebug() << reducewerte2.size() << "epsilon = 5 reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
+
+    t.start();
+    QVector<QPointF> reducewerte3 = reducePath( zlist.toVector(),  8 );
+    qDebug() << reducewerte3.size() << "epsilon = 8 reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
 
     //Orginalwerte
     druckWerte->attachAxis(radialAxis);
@@ -77,8 +81,16 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
    reduzierteDruckwerte2->attachAxis(radialAxis);
    reduzierteDruckwerte2->attachAxis(angularAxis);
    reduzierteDruckwerte2->replace(reducewerte2.toList());
-   reduzierteDruckwerte2->setName("epsilon = 2");
+   reduzierteDruckwerte2->setName("epsilon = 5");
    chart()->addSeries(reduzierteDruckwerte2);
+
+    //ganz anders reduzierte punkte
+   reduzierteDruckwerte3 = new QLineSeries();
+   reduzierteDruckwerte3->attachAxis(radialAxis);
+   reduzierteDruckwerte3->attachAxis(angularAxis);
+   reduzierteDruckwerte3->replace(reducewerte3.toList());
+   reduzierteDruckwerte3->setName("epsilon = 8");
+   chart()->addSeries(reduzierteDruckwerte3);
 
    // repaint();
     qDebug() << "Frame: " << ++frameZaehler;
@@ -169,16 +181,16 @@ void PolarChart::keyPressEvent(QKeyEvent *event)
         chart()->zoomOut();
         break;
     case Qt::Key_Left:
-        chart()->scroll(-1.0, 0);
+        chart()->scroll(-8.0, 0);
         break;
     case Qt::Key_Right:
-        chart()->scroll(1.0, 0);
+        chart()->scroll(8.0, 0);
         break;
     case Qt::Key_Up:
-        chart()->scroll(0, 1.0);
+        chart()->scroll(0, 8.0);
         break;
     case Qt::Key_Down:
-        chart()->scroll(0, -1.0);
+        chart()->scroll(0, -8.0);
         break;
     case Qt::Key_Space:
         switchChartType();

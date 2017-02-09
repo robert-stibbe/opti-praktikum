@@ -29,6 +29,7 @@ private:
     QLineSeries *druckWerte ;
     QLineSeries *reduzierteDruckwerte;
     QLineSeries *reduzierteDruckwerte2;
+    QLineSeries *reduzierteDruckwerte3;
     bool isOriSichtbar;
 };
 
