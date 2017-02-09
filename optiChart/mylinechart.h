@@ -37,7 +37,8 @@ private:
     QScatterSeries *series1;
     QLineSeries *druckWerte2 ;
     float schrittweite1;
-     QTimer *timer;
+    QTimer *timer;
+    bool mausklickAktiv ;
 
 public slots:
     void update();

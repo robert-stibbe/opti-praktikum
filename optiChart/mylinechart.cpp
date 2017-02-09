@@ -34,6 +34,7 @@ MyLineChart::MyLineChart(QWidget *parent )
 MyLineChart::initMyChart()
 {
      timer->stop();
+     mausklickAktiv = true;
      lin1 = new QLineSeries();
      series1 = new QScatterSeries();
 
@@ -143,6 +144,9 @@ void MyLineChart::keyPressEvent(QKeyEvent *event)
 
 void MyLineChart::mousePressEvent(QMouseEvent *event)
 {
+    if ( ! mausklickAktiv)
+        return;
+
     QChart *oldChart = chart();
 
     QPointF chartPos = oldChart->mapToValue(event->localPos());
@@ -215,10 +219,8 @@ void MyLineChart::update()
         chart()->removeSeries(series);
 
 //füge neue punkte hinzu
-
     druckWerte2 = new QLineSeries();
-
-      druckWerte2->append(zlist);
+    druckWerte2->append(zlist);
     //druckWerte2->replace(zlist);
     chart()->addSeries(druckWerte2);
 
@@ -228,6 +230,7 @@ void MyLineChart::update()
 
 void MyLineChart::initBasisWerte()
 {
+    mausklickAktiv = false;
     QLineSeries *marker1 = new QLineSeries();
     marker1->append(0, 0);
     marker1->append(90, 100);
@@ -306,5 +309,6 @@ void MyLineChart::setSchrittweite(double sw)
 
 void MyLineChart::stopDenBloedenTimer()
 {
+        mausklickAktiv = false;
     timer->stop();
 }

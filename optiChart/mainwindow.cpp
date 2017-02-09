@@ -59,6 +59,7 @@ void MainWindow::showAchsen()
 
 void MainWindow::showTestdaten(Dtyp datentyp)
 {
+
     ui->graphicsView->stopDenBloedenTimer();
     ui->stackedWidget->setCurrentIndex(2);
     showAchsen();
