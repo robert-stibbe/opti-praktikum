@@ -11,9 +11,9 @@
 #include "path_reduction.h"
 
 static const qreal MITTELWERT = 0.0;
-static const qreal increment  = 0.1;
+static const qreal increment  = 0.005;
 static const qreal ABWEICHUNG = 3 / std::sqrt(increment);
-static const qreal epsilon = 0.15;
+static const qreal epsilon = 0.5;
 long frameZaehler = 0;
 
 // Berechne Punktabstand(Linienlänge) und Abstand Linie zu Punkt
@@ -24,6 +24,7 @@ MyLineChart::MyLineChart()
 
 MyLineChart::MyLineChart(QWidget *parent )
 {
+    reduceType = Unveraendert;
      timerAn = true;
     timer = new QTimer(this);
     QObject::connect(  timer,            &QTimer::timeout,
@@ -248,19 +249,23 @@ void MyLineChart::update()
         case DouglasPeucker  : reducewerte = reducePathDouglasPeucker( zlist.toVector(),  epsilon );    break; //O1
         case Lang:  reducewerte = reducePathLang( zlist.toVector(),  epsilon );  break; //O2
         case Ralph : reducewerte = reducePathRalph( zlist.toVector(),  epsilon );   break; //O3
-        default: break;
+        default: reducewerte = zlist.toVector(); break;
     }
 
 //    QVector<QPointF> reducewerte4 = reducePathDouglasPeucker( reducePathRalph( zlist.toVector(),  epsilon/2 ), epsilon/2 );   //O4
 //    QVector<QPointF> reducewerte5 = reducePathDouglasPeucker( reducePathLang( zlist.toVector(),  epsilon/2 ), epsilon/2 ); //O5
-   qDebug() << reducewerte.size()   << " reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
+
+    if (reduceType == DouglasPeucker ||  reduceType == Ralph || reduceType == Lang)
+        qDebug() << reducewerte.size()   << " reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
+    else
+        qDebug() << reducewerte.size()   << " NICHT reduzierte Punkte.  ";
 
     foreach (QAbstractSeries *series,  chart()->series())
         chart()->removeSeries(series);
 
 //füge neue punkte hinzu
      QLineSeries *druckWerte = new QLineSeries();
-    druckWerte->append(zlist);
+    druckWerte->append(reducewerte.toList());
     //druckWerte2->replace(zlist);
     chart()->addSeries(druckWerte);
 

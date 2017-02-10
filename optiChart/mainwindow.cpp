@@ -5,6 +5,7 @@
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
 
+#include <QMessageBox>
 #include <QPolarChart>
 #include <QScatterSeries>
 #include <QTimer>
@@ -188,8 +189,18 @@ void MainWindow::on_pushButton_9_clicked()
      double sw =  s.toFloat(&ok);
      if (ok)
      {
-         ui->graphicsView->setSchrittweite( sw );
-         qDebug() << "schrittweite " << sw;
+         if (sw > 0.0008 && sw < 20 )
+         {
+            ui->graphicsView->setSchrittweite( sw );
+            qDebug() << "Gueltige schrittweite " << sw;
+         }
+         else
+         {
+             QMessageBox messageBox;
+             messageBox.critical(0,"Error","Schrittweite ungueltig !");
+             messageBox.setFixedSize(500,200);
+             messageBox.show();
+         }
      }
      else
      {
@@ -211,4 +222,9 @@ void MainWindow::on_pushButton_10_clicked()
 void MainWindow::on_pushButton_12_clicked()
 {
     ui->graphicsView->swichReduceType(MyLineChart::DouglasPeucker);
+}
+
+void MainWindow::on_pushButton_13_clicked()
+{
+    ui->graphicsView->swichReduceType(MyLineChart::Unveraendert);
 }

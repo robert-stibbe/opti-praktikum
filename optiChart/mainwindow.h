@@ -35,6 +35,8 @@ private slots:
 
    void on_pushButton_12_clicked();
 
+   void on_pushButton_13_clicked();
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

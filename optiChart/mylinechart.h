@@ -20,7 +20,7 @@ public:
     MyLineChart();
     MyLineChart(QWidget *parent = Q_NULLPTR);
 
-     enum reduceAlgo {DouglasPeucker, Lang, Ralph };
+     enum reduceAlgo {Unveraendert, DouglasPeucker, Lang, Ralph };
 
     void switchChartType();
     initMyChart();
