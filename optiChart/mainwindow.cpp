@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+
     ui->setupUi(this);
 }
 
@@ -193,4 +195,20 @@ void MainWindow::on_pushButton_9_clicked()
      {
          qDebug() << "schrittweite falsch " << sw;
      }
+}
+
+void MainWindow::on_pushButton_11_clicked()
+{
+    ui->graphicsView->switchTimer();
+    ui->graphicsView->initBasisWerte();
+}
+
+void MainWindow::on_pushButton_10_clicked()
+{
+    ui->graphicsView->swichReduceType(MyLineChart::Ralph);
+}
+
+void MainWindow::on_pushButton_12_clicked()
+{
+    ui->graphicsView->swichReduceType(MyLineChart::DouglasPeucker);
 }

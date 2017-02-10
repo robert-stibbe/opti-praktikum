@@ -20,6 +20,8 @@ public:
     MyLineChart();
     MyLineChart(QWidget *parent = Q_NULLPTR);
 
+     enum reduceAlgo {DouglasPeucker, Lang, Ralph };
+
     void switchChartType();
     initMyChart();
 
@@ -27,11 +29,13 @@ public:
 
     void setSchrittweite(double sw);
     void stopDenBloedenTimer();
+    switchTimer();
+    void swichReduceType(reduceAlgo rt);
 private:
     QPointF pointL;
     QPointF pointR;
     QPointF pointP;
-
+    reduceAlgo reduceType ;
     QList<QPointF> oriWerte;
     QLineSeries *lin1;
     QScatterSeries *series1;
@@ -39,6 +43,7 @@ private:
     float schrittweite1;
     QTimer *timer;
     bool mausklickAktiv ;
+    bool timerAn;
 
 public slots:
     void update();

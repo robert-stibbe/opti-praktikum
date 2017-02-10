@@ -13,7 +13,7 @@ QT_CHARTS_USE_NAMESPACE
 static const qreal MITTELWERT = 0.0;
 static const qreal increment  = 0.0001;
 static const qreal ABWEICHUNG = 3 / std::sqrt(increment);
-static const qreal epsilon = 0.04;
+static const qreal epsilon = 0.15;
 static const qreal epsilon2 = 1.0;
 
 long frameZaehler = 0;
@@ -53,12 +53,12 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
 
     QTime t;
     t.start();
-    QVector<QPointF> reducewerte1 = reducePathDouglasPeucker( zlist.toVector(),  epsilon ); //O1
+   QVector<QPointF> reducewerte1 = reducePathDouglasPeucker( zlist.toVector(),  epsilon ); //O1
     QVector<QPointF> reducewerte2 = reducePathLang( zlist.toVector(),  epsilon );  //O2
     QVector<QPointF> reducewerte3 = reducePathRalph( zlist.toVector(),  epsilon ); //O3
-    QVector<QPointF> reducewerte4 = reducePathDouglasPeucker( reducePathRalph( zlist.toVector(),  epsilon/2 ), epsilon/2 );   //O4
-    QVector<QPointF> reducewerte5 = reducePathDouglasPeucker( reducePathLang( zlist.toVector(),  epsilon/2 ), epsilon/2 ); //O5
-    //qDebug() << reducewerte.size()   << " reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
+//    QVector<QPointF> reducewerte4 = reducePathDouglasPeucker( reducePathRalph( zlist.toVector(),  epsilon/2 ), epsilon/2 );   //O4
+//    QVector<QPointF> reducewerte5 = reducePathDouglasPeucker( reducePathLang( zlist.toVector(),  epsilon/2 ), epsilon/2 ); //O5
+   //qDebug() << reducewerte.size()   << " reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
 /*
     t.start();
     QVector<QPointF> reducewerte2 = reducePathDouglasPeucker( reducePathLang( zlist.toVector(),  epsilon2/2 ), epsilon2/2 );
@@ -77,12 +77,12 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
 //    chart()->addSeries(druckWerte);
 */
     //reduzierte punkte
-    reduzierteDruckwerte = new QLineSeries();
-    reduzierteDruckwerte->attachAxis(radialAxis);
-    reduzierteDruckwerte->attachAxis(angularAxis);
-    reduzierteDruckwerte->replace(reducewerte1.toList());
-    reduzierteDruckwerte->setName(QString("O1, epsilon = %1").arg(epsilon));
-    chart()->addSeries(reduzierteDruckwerte);
+    reduzierteDruckwerte1 = new QLineSeries();
+    reduzierteDruckwerte1->attachAxis(radialAxis);
+    reduzierteDruckwerte1->attachAxis(angularAxis);
+    reduzierteDruckwerte1->replace(reducewerte1.toList());
+    reduzierteDruckwerte1->setName(QString("O1, epsilon = %1").arg(epsilon));
+    chart()->addSeries(reduzierteDruckwerte1);
 
     //anders reduzierte punkte
    reduzierteDruckwerte2 = new QLineSeries();

@@ -5,12 +5,15 @@
 #include <QtCharts/QLineSeries>
 #include <QPolarChart>
 #include <QScatterSeries>
+#include <QTime>
 #include <QTimer>
 #include <QValueAxis>
+#include "path_reduction.h"
 
-const int MITTELWERT = 0;
-const int ABWEICHUNG = 5;
-
+static const qreal MITTELWERT = 0.0;
+static const qreal increment  = 0.1;
+static const qreal ABWEICHUNG = 3 / std::sqrt(increment);
+static const qreal epsilon = 0.15;
 long frameZaehler = 0;
 
 // Berechne Punktabstand(Linienlänge) und Abstand Linie zu Punkt
@@ -21,6 +24,7 @@ MyLineChart::MyLineChart()
 
 MyLineChart::MyLineChart(QWidget *parent )
 {
+     timerAn = true;
     timer = new QTimer(this);
     QObject::connect(  timer,            &QTimer::timeout,
                    this, &MyLineChart::update);
@@ -29,6 +33,15 @@ MyLineChart::MyLineChart(QWidget *parent )
    QList<QPointF> zlist;
    zlist.append(QPointF(0,0));
    druckWerte2->append(zlist);
+}
+
+MyLineChart::switchTimer()
+{
+    if (timerAn == true)
+        timerAn=false;
+    else
+        timerAn=true;
+    //oder timerAn = ! timerAn;
 }
 
 MyLineChart::initMyChart()
@@ -122,16 +135,16 @@ void MyLineChart::keyPressEvent(QKeyEvent *event)
         chart()->zoomOut();
         break;
     case Qt::Key_Left:
-        chart()->scroll(-1.0, 0);
+        chart()->scroll(-8.0, 0);
         break;
     case Qt::Key_Right:
-        chart()->scroll(1.0, 0);
+        chart()->scroll(8.0, 0);
         break;
     case Qt::Key_Up:
-        chart()->scroll(0, 1.0);
+        chart()->scroll(0, 8.0);
         break;
     case Qt::Key_Down:
-        chart()->scroll(0, -1.0);
+        chart()->scroll(0, -8.0);
         break;
     case Qt::Key_Space:
         switchChartType();
@@ -198,6 +211,10 @@ void MyLineChart::mousePressEvent(QMouseEvent *event)
    // update();
 
 }
+void MyLineChart::swichReduceType(reduceAlgo rt )
+{
+    reduceType = rt;
+}
 
 
 void MyLineChart::update()
@@ -207,22 +224,45 @@ void MyLineChart::update()
     static std::normal_distribution<> dist(MITTELWERT, ABWEICHUNG);
 
 //addiere zufallszahlen zu Druckwert
+
     QList<QPointF> zlist;
+    qreal y1 = 0;
+    qreal y2 = 0;
     foreach (QPointF pt, oriWerte)
     {
-       double zufallsZahl = dist(e2);
+       qreal zufallsZahl = dist(e2);
        //  qDebug() << zufallsZahl;
-       zlist.append(QPointF( pt.rx(),pt.ry()+zufallsZahl));
+       const qreal factor = increment;
+       y1 = ( pt.ry()+zufallsZahl ) * factor + y1 * (1-factor);
+       y2 = ( y1                  ) * factor + y2 * (1-factor);
+       zlist.append(QPointF( pt.rx(),y2 ) );
     }
+
+    QVector<QPointF> reducewerte;
+    QTime t;
+    t.start();
+
+
+    switch(reduceType)
+    {
+        case DouglasPeucker  : reducewerte = reducePathDouglasPeucker( zlist.toVector(),  epsilon );    break; //O1
+        case Lang:  reducewerte = reducePathLang( zlist.toVector(),  epsilon );  break; //O2
+        case Ralph : reducewerte = reducePathRalph( zlist.toVector(),  epsilon );   break; //O3
+        default: break;
+    }
+
+//    QVector<QPointF> reducewerte4 = reducePathDouglasPeucker( reducePathRalph( zlist.toVector(),  epsilon/2 ), epsilon/2 );   //O4
+//    QVector<QPointF> reducewerte5 = reducePathDouglasPeucker( reducePathLang( zlist.toVector(),  epsilon/2 ), epsilon/2 ); //O5
+   qDebug() << reducewerte.size()   << " reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
 
     foreach (QAbstractSeries *series,  chart()->series())
         chart()->removeSeries(series);
 
 //füge neue punkte hinzu
-    druckWerte2 = new QLineSeries();
-    druckWerte2->append(zlist);
+     QLineSeries *druckWerte = new QLineSeries();
+    druckWerte->append(zlist);
     //druckWerte2->replace(zlist);
-    chart()->addSeries(druckWerte2);
+    chart()->addSeries(druckWerte);
 
    // repaint();
    // qDebug() << "Frame: " << ++frameZaehler;
@@ -237,17 +277,25 @@ void MyLineChart::initBasisWerte()
 
 // erzeuge testpunkte
     oriWerte.clear();
-
     qDebug() << "schrittweite " << schrittweite1;
 
+    for (float phi=0; phi<360; phi+=schrittweite1)
+    {
+        float druck = phi/3.6;
+        oriWerte.append( QPointF(phi, druck));
+    }
+/*
     for (float phi=0; phi<360; phi+= schrittweite1)
     {
        float druck = phi;
        oriWerte.append( QPointF (phi, druck));
     }
-
+*/
     qDebug() << oriWerte.size() << " Punkte generiert!";
-    timer->start(1);
+    if (timerAn)
+        timer->start(1);
+    else
+        timer->stop();
 }
 
 void MyLineChart::switchChartType()

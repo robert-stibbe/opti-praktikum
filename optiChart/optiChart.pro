@@ -6,6 +6,8 @@
 
 QT       += core gui widgets charts
 
+CONFIG += c++14
+
 TARGET = Test
 TEMPLATE = app
 
@@ -23,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mylinechart.cpp
+        mylinechart.cpp \
+        path_reduction.cpp
 
 HEADERS  += mainwindow.h \
-    mylinechart.h
+    mylinechart.h \
+    path_reduction.h
 
 FORMS    += mainwindow.ui

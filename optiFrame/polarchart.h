@@ -27,7 +27,7 @@ private:
 //   QList<QAbstractSeries *> oriSeriesList ;
     QList<QPointF> oriWerte;
     QLineSeries *druckWerte ;
-    QLineSeries *reduzierteDruckwerte;
+    QLineSeries *reduzierteDruckwerte1;
     QLineSeries *reduzierteDruckwerte2;
     QLineSeries *reduzierteDruckwerte3;
     bool isOriSichtbar;
