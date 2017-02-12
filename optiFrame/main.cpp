@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
     chartView->setChart(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->initBasisWerte(angularAxis,radialAxis);
+    chartView->createMarker();
     chartView->update(angularAxis,radialAxis);
 
     QMainWindow window;

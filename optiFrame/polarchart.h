@@ -15,6 +15,8 @@ public:
     PolarChart(QWidget *parent = 0);
     void initBasisWerte(QtCharts::QValueAxis *angularAxis, QtCharts::QValueAxis *radialAxis);
 
+    void createMarker();
+
 public slots:
     void update(QValueAxis *angularAxis, QValueAxis *radialAxis);
 

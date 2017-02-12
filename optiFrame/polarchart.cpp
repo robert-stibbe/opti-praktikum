@@ -10,6 +10,7 @@
 
 QT_CHARTS_USE_NAMESPACE
 
+static const bool  FRAME_TIMER_AKTIV = false; // true für frame messung
 static const qreal MITTELWERT = 0.0;
 static const qreal increment  = 0.0001;
 static const qreal ABWEICHUNG = 3 / std::sqrt(increment);
@@ -22,13 +23,20 @@ PolarChart::PolarChart(QWidget *parent)
     : QChartView(parent)
 {
     druckWerte = new QLineSeries();
+    reduzierteDruckwerte1 = new QLineSeries();
+    reduzierteDruckwerte2 = new QLineSeries();
+    reduzierteDruckwerte3 = new QLineSeries();
+
     isOriSichtbar=true;
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-//    timer->start(1);
+
+    if (FRAME_TIMER_AKTIV)
+       timer->start(1);
 }
 
+// anzeige von neuen Zufallskurven
 void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
 {
     static std::random_device rd;
@@ -37,7 +45,7 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
 
     switchChartType();
 
-//addiere zufallszahlen zu Druckwert
+//Addiere Zufallszahlen zu Druckwerten
     QList<QPointF> zlist;
     qreal y1 = 0;
     qreal y2 = 0;
@@ -53,7 +61,7 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
 
     QTime t;
     t.start();
-   QVector<QPointF> reducewerte1 = reducePathDouglasPeucker( zlist.toVector(),  epsilon ); //O1
+    QVector<QPointF> reducewerte1 = reducePathDouglasPeucker( zlist.toVector(),  epsilon ); //O1
     QVector<QPointF> reducewerte2 = reducePathLang( zlist.toVector(),  epsilon );  //O2
     QVector<QPointF> reducewerte3 = reducePathRalph( zlist.toVector(),  epsilon ); //O3
 //    QVector<QPointF> reducewerte4 = reducePathDouglasPeucker( reducePathRalph( zlist.toVector(),  epsilon/2 ), epsilon/2 );   //O4
@@ -68,99 +76,65 @@ void PolarChart::update(QValueAxis *angularAxis, QValueAxis *radialAxis)
     QVector<QPointF> reducewerte3 = reducePath( zlist.toVector(),  8 );
     qDebug() << reducewerte3.size() << "epsilon = 8 reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
 */
-    /*
-    //Orginalwerte
+
+/*
+    //Orginalwerte anzeigen
     druckWerte->attachAxis(radialAxis);
     druckWerte->attachAxis(angularAxis);
     druckWerte->replace(zlist);
     druckWerte->setName("ori");
-//    chart()->addSeries(druckWerte);
+    chart()->addSeries(druckWerte);
 */
     //reduzierte punkte
-    reduzierteDruckwerte1 = new QLineSeries();
-    reduzierteDruckwerte1->attachAxis(radialAxis);
-    reduzierteDruckwerte1->attachAxis(angularAxis);
-    reduzierteDruckwerte1->replace(reducewerte1.toList());
     reduzierteDruckwerte1->setName(QString("O1, epsilon = %1").arg(epsilon));
+    reduzierteDruckwerte1->replace(reducewerte1.toList());
+   // reduzierteDruckwerte1->attachAxis(radialAxis);
+    //reduzierteDruckwerte1->attachAxis(angularAxis);
     chart()->addSeries(reduzierteDruckwerte1);
-
+/*
     //anders reduzierte punkte
-   reduzierteDruckwerte2 = new QLineSeries();
+   reduzierteDruckwerte2->setName(QString("O2, epsilon = %1").arg(epsilon));
    reduzierteDruckwerte2->attachAxis(radialAxis);
    reduzierteDruckwerte2->attachAxis(angularAxis);
    reduzierteDruckwerte2->replace(reducewerte2.toList());
-   reduzierteDruckwerte2->setName(QString("O2, epsilon = %1").arg(epsilon));
    chart()->addSeries(reduzierteDruckwerte2);
 
     //ganz anders reduzierte punkte
-   reduzierteDruckwerte3 = new QLineSeries();
+   reduzierteDruckwerte3->setName(QString("O3, epsilon = %1").arg(epsilon));
    reduzierteDruckwerte3->attachAxis(radialAxis);
    reduzierteDruckwerte3->attachAxis(angularAxis);
    reduzierteDruckwerte3->replace(reducewerte3.toList());
-   reduzierteDruckwerte3->setName(QString("O3, epsilon = %1").arg(epsilon));
    chart()->addSeries(reduzierteDruckwerte3);
-
+*/
    // repaint();
-    qDebug() << "Frame: " << ++frameZaehler;
+    if (FRAME_TIMER_AKTIV)
+         qDebug() << "Frame: " << ++frameZaehler;
+}
+
+void PolarChart::createMarker()
+{
+    QLineSeries *marker1 = new QLineSeries();
+    marker1->setName(QString("Marker"));
+
+    marker1->append(0, 0);
+    marker1->append(90, 100);
+
+    chart()->addSeries(marker1);
 }
 
 void PolarChart::initBasisWerte(QValueAxis *angularAxis, QValueAxis *radialAxis)
 {
-    QLineSeries *marker1 = new QLineSeries();
-    marker1->append(0, 0);
-    marker1->append(90, 100);
 
-// erzeuge testpunkte
+// erzeuge basis testpunkte
   for (float phi=0; phi<360; phi+=increment)
   {
       float druck = phi/3.6;
       oriWerte.append( QPointF(phi, druck));
   }
   qDebug() << oriWerte.size() << " Punkte generiert!";
-
-
-
-  /*
-  oriWerte.append( QPointF (0,10));
-  oriWerte.append( QPointF (45, 7));
-  oriWerte.append( QPointF (90, 5));
-  oriWerte.append( QPointF (135, 6));
-  oriWerte.append( QPointF (180, 8));
-  oriWerte.append( QPointF (210, 14));
-  oriWerte.append( QPointF (240, 22));
-  oriWerte.append( QPointF (270, 30));
-  oriWerte.append( QPointF (300, 40));
-  oriWerte.append( QPointF (320, 50));
-  oriWerte.append( QPointF (350, 70));
-  oriWerte.append( QPointF (360, 100));
-  oriWerte.append( QPointF (0, 100));
-  oriWerte.append( QPointF (5, 90));
-  oriWerte.append( QPointF (10, 80));
-  oriWerte.append( QPointF (20, 60));
-  oriWerte.append( QPointF (50, 45));
-  oriWerte.append( QPointF (60, 40));
-  oriWerte.append( QPointF (90, 35));
-  oriWerte.append( QPointF (110, 30));
-  oriWerte.append( QPointF (130, 26));
-  oriWerte.append( QPointF (150, 23));
-  oriWerte.append( QPointF (180, 20));
-  oriWerte.append( QPointF (210, 20));
-  oriWerte.append( QPointF (240, 20));
-  oriWerte.append( QPointF (270, 20));
-  oriWerte.append( QPointF (290, 18));
-  oriWerte.append( QPointF (310, 15));
-  oriWerte.append( QPointF (340, 12));
-  oriWerte.append( QPointF (360, 10));
-  */
-/*
-  druckWerte2->append(oriWerte);
-//  druckWerte2->append(reducewerte.toList());
-
-  chart()->addSeries(druckWerte2);
-  druckWerte2->attachAxis(radialAxis);
-  druckWerte2->attachAxis(angularAxis);
-*/
 }
+
+
 
 void PolarChart::keyPressEvent(QKeyEvent *event)
 {
