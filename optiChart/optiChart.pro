@@ -8,7 +8,7 @@ QT       += core gui widgets charts
 
 CONFIG += c++14
 
-TARGET = Test
+TARGET = optiChart
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use

@@ -11,7 +11,7 @@
 #include "path_reduction.h"
 
 static const qreal MITTELWERT = 0.0;
-static const qreal increment  = 0.005;
+static const qreal increment  = 0.05;
 static const qreal ABWEICHUNG = 3 / std::sqrt(increment);
 static const qreal epsilon = 0.5;
 long frameZaehler = 0;
@@ -24,16 +24,16 @@ MyLineChart::MyLineChart()
 
 MyLineChart::MyLineChart(QWidget *parent )
 {
-    reduceType = Unveraendert;
-     timerAn = true;
-    timer = new QTimer(this);
-    QObject::connect(  timer,            &QTimer::timeout,
-                   this, &MyLineChart::update);
+   reduceType = Unveraendert;
+   timerAn = true;
+   timer = new QTimer(this);
+   QObject::connect(  timer,  &QTimer::timeout,
+                      this,   &MyLineChart::update);
    schrittweite1 = 0.5;
-   druckWerte2 = new QLineSeries ();
+   druckWerte = new QLineSeries ();
    QList<QPointF> zlist;
    zlist.append(QPointF(0,0));
-   druckWerte2->append(zlist);
+   druckWerte->append(zlist);
 }
 
 MyLineChart::switchTimer()
@@ -45,7 +45,7 @@ MyLineChart::switchTimer()
     //oder timerAn = ! timerAn;
 }
 
-MyLineChart::initMyChart()
+void MyLineChart::initMyChart()
 {
      timer->stop();
      mausklickAktiv = true;
@@ -81,17 +81,21 @@ MyLineChart::initMyChart()
      lin1->attachAxis(yAxis);
      series1->attachAxis(yAxis);
      chart()->addAxis(yAxis, Qt::AlignBottom);
-
-    //   chart->createDefaultAxes();
      chart()->setTitle("Klicke auf den Chart : linke und rechte Maustaste = linie backbutton der Maus = punkt ");
 
-    //     MyLineChart *chartView = new MyLineChart();
-    //   chartView->setChart(chart);
-
-//     lin1->append(3,3);
-//     lin1->append(4,4);
      chart()->addSeries(lin1);//leere liste
      chart()->addSeries(series1);//leere liste
+}
+
+void MyLineChart::createMarker()
+{
+    QLineSeries *marker1 = new QLineSeries();
+    marker1->setName(QString("Marker"));
+
+    marker1->append(0, 0);
+    marker1->append(90, 100);
+
+    chart()->addSeries(marker1);
 }
 
 qreal punktAbstand (QPointF pointL , QPointF pointR)
@@ -243,18 +247,15 @@ void MyLineChart::update()
     QTime t;
     t.start();
 
-
     switch(reduceType)
     {
         case DouglasPeucker  : reducewerte = reducePathDouglasPeucker( zlist.toVector(),  epsilon );    break; //O1
-        case Lang:  reducewerte = reducePathLang( zlist.toVector(),  epsilon );  break; //O2
-        case Ralph : reducewerte = reducePathRalph( zlist.toVector(),  epsilon );   break; //O3
-        default: reducewerte = zlist.toVector(); break;
+        case Lang:     reducewerte = reducePathLang( zlist.toVector(),  epsilon );  break; //O2
+        case Ralph :   reducewerte = reducePathRalph( zlist.toVector(),  epsilon );   break; //O3
+        case DpRalph : reducewerte = reducePathDouglasPeucker( reducePathRalph( zlist.toVector(),  epsilon/2 ), epsilon/2 ); break;  //O4
+        case DpLang :  reducewerte = reducePathDouglasPeucker( reducePathLang( zlist.toVector(),  epsilon/2 ), epsilon/2 );  break; //O5
+        default:       reducewerte = zlist.toVector(); break;
     }
-
-//    QVector<QPointF> reducewerte4 = reducePathDouglasPeucker( reducePathRalph( zlist.toVector(),  epsilon/2 ), epsilon/2 );   //O4
-//    QVector<QPointF> reducewerte5 = reducePathDouglasPeucker( reducePathLang( zlist.toVector(),  epsilon/2 ), epsilon/2 ); //O5
-
     if (reduceType == DouglasPeucker ||  reduceType == Ralph || reduceType == Lang)
         qDebug() << reducewerte.size()   << " reduzierte Punkte. Benoetigte Zeit: " << t.elapsed();
     else
@@ -264,8 +265,8 @@ void MyLineChart::update()
         chart()->removeSeries(series);
 
 //füge neue punkte hinzu
-     QLineSeries *druckWerte = new QLineSeries();
-    druckWerte->append(reducewerte.toList());
+ //    QLineSeries *druckWerte = new QLineSeries();
+    druckWerte->replace(reducewerte.toList());
     //druckWerte2->replace(zlist);
     chart()->addSeries(druckWerte);
 
@@ -276,10 +277,11 @@ void MyLineChart::update()
 void MyLineChart::initBasisWerte()
 {
     mausklickAktiv = false;
+    /*
     QLineSeries *marker1 = new QLineSeries();
     marker1->append(0, 0);
     marker1->append(90, 100);
-
+*/
 // erzeuge testpunkte
     oriWerte.clear();
     qDebug() << "schrittweite " << schrittweite1;
@@ -289,13 +291,7 @@ void MyLineChart::initBasisWerte()
         float druck = phi/3.6;
         oriWerte.append( QPointF(phi, druck));
     }
-/*
-    for (float phi=0; phi<360; phi+= schrittweite1)
-    {
-       float druck = phi;
-       oriWerte.append( QPointF (phi, druck));
-    }
-*/
+
     qDebug() << oriWerte.size() << " Punkte generiert!";
     if (timerAn)
         timer->start(1);
@@ -362,6 +358,6 @@ void MyLineChart::setSchrittweite(double sw)
 
 void MyLineChart::stopDenBloedenTimer()
 {
-        mausklickAktiv = false;
+    mausklickAktiv = false;
     timer->stop();
 }

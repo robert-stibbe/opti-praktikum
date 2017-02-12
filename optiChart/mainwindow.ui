@@ -54,16 +54,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_8">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Punktanzahl reduzieren&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Optimierung</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QStackedWidget" name="stackedWidget">
           <property name="currentIndex">
            <number>1</number>
@@ -129,7 +119,7 @@
              <item>
               <widget class="QLineEdit" name="schrittweite1">
                <property name="text">
-                <string>0.5</string>
+                <string>0.05</string>
                </property>
               </widget>
              </item>
@@ -156,18 +146,7 @@
             </property>
            </widget>
           </widget>
-          <widget class="QWidget" name="page_2">
-           <widget class="QLineEdit" name="lineEdit_3">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>40</y>
-              <width>81</width>
-              <height>20</height>
-             </rect>
-            </property>
-           </widget>
-          </widget>
+          <widget class="QWidget" name="page_2"/>
           <widget class="QWidget" name="page_3">
            <widget class="QWidget" name="horizontalLayoutWidget_2">
             <property name="geometry">

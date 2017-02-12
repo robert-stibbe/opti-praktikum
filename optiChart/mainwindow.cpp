@@ -18,9 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
-
     ui->setupUi(this);
+    ui->stackedWidget->setCurrentIndex(2);
 }
 
 MainWindow::~MainWindow()
@@ -62,7 +61,6 @@ void MainWindow::showAchsen()
 
 void MainWindow::showTestdaten(Dtyp datentyp)
 {
-
     ui->graphicsView->stopDenBloedenTimer();
     ui->stackedWidget->setCurrentIndex(2);
     showAchsen();

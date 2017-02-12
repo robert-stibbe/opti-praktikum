@@ -20,10 +20,10 @@ public:
     MyLineChart();
     MyLineChart(QWidget *parent = Q_NULLPTR);
 
-     enum reduceAlgo {Unveraendert, DouglasPeucker, Lang, Ralph };
+     enum reduceAlgo {Unveraendert, DouglasPeucker, Lang, Ralph, DpRalph, DpLang };
 
     void switchChartType();
-    initMyChart();
+    void initMyChart();
 
     void initBasisWerte();
 
@@ -31,6 +31,8 @@ public:
     void stopDenBloedenTimer();
     switchTimer();
     void swichReduceType(reduceAlgo rt);
+    void createMarker();
+
 private:
     QPointF pointL;
     QPointF pointR;
@@ -39,7 +41,7 @@ private:
     QList<QPointF> oriWerte;
     QLineSeries *lin1;
     QScatterSeries *series1;
-    QLineSeries *druckWerte2 ;
+    QLineSeries *druckWerte ;
     float schrittweite1;
     QTimer *timer;
     bool mausklickAktiv ;
